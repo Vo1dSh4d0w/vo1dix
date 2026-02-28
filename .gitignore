@@ -1,0 +1,6 @@
+*.o
+iso/
+isodir/
+sysroot/
+out/
+vo1dix.kernel
