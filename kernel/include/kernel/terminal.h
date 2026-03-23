@@ -7,7 +7,8 @@
 #define TERMINAL_COLS 80
 
 struct terminal_cell {
-    uint16_t ch;
+    uint8_t ch;
+    uint8_t attr;
 };
 
 enum terminal_type {
@@ -21,10 +22,13 @@ typedef struct {
     
     uint16_t col;
     uint16_t row;
+    
+    uint8_t attr;
 } TERMINAL;
 
 extern TERMINAL tty0; // at least one terminal should always exist
 
+void terminal_set_attr(TERMINAL *term, uint8_t attr);
 void terminal_putchar(TERMINAL *term, int c);
 
 #endif
