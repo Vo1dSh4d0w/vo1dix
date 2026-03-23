@@ -1,0 +1,43 @@
+#include <ctype.h>
+#include <kernel/terminal.h>
+#include <stdint.h>
+#include "vga.h"
+
+TERMINAL tty0 = {
+    .cells = {},
+
+    .col = 0,
+    .row = 0,
+
+    .ttype = TTYPE_VGA,
+};
+
+static void terminal_render_cell(TERMINAL* term, uint16_t row, uint16_t col) {
+    switch (term->ttype) {
+        case TTYPE_VGA:
+        if (isprint(term->cells[row][col].ch))
+        vga_putchar(col, row, vga_entry_create((uint8_t) term->cells[row][col].ch, VGA_COLOR_WHITE));
+        break;
+    }
+}
+
+void terminal_putchar(TERMINAL *term, int c) {
+    if (c == '\n') {
+        term->col = 0;
+        term->row++;
+    } else if (c == '\r') {
+        term->col = 0;
+    } else if (isprint(c)) {
+        term->cells[term->row][term->col].ch = c;
+        terminal_render_cell(term, term->row, term->col);
+        
+        term->col++;
+        if (term->col >= TERMINAL_COLS) {
+            term->col = 0;
+            term->row++;
+        }
+    }
+    if (term->row >= TERMINAL_ROWS) {
+        asm volatile("cli\n\thlt"); // TODO: implement proper scrolling
+    }
+}

@@ -1,9 +1,8 @@
 TARGET_ARCH?=i686
-DESTDIR?=
 
-CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra
+CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -Iinclude
 LDFLAGS:=$(LDFLAGS)
-LIBS:=$(LIBS) -nostdlib -lgcc
+LIBS:=$(LIBS) -nostdlib -lgcc -lk
 
 ARCH_SOURCE=arch/$(TARGET_ARCH)
 

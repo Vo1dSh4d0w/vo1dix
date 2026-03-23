@@ -2,8 +2,9 @@
 
 . ./config.sh
 
-cd kernel
-make clean
+for PROJECT in $PROJECTS; do
+    (cd $PROJECT && make clean)
+done
 
 rm -rf $SYSROOT
 rm -rf isodir
