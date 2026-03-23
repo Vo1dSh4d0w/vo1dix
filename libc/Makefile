@@ -8,6 +8,7 @@ LIBC_OBJS=\
 ctype/isprint.o \
 stdio/printf.o \
 stdio/putchar.o \
+string/memmove.o \
 string/memset.o \
 string/strlen.o
 

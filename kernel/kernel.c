@@ -2,7 +2,9 @@
 #include <stdio.h>
 
 void kernel_main() {
-    printf("Hello, world!\n");
+    for (int i = 0; i < 29; i++) {
+        printf("Hello, world! %d\n", i);
+    }
     
     for (;;) {}
 }
