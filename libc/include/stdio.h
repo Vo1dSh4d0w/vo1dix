@@ -3,4 +3,6 @@
 
 int putchar(int c);
 
+int printf(const char *restrict format, ...);
+
 #endif

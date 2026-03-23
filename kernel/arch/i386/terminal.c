@@ -15,7 +15,6 @@ TERMINAL tty0 = {
 static void terminal_render_cell(TERMINAL* term, uint16_t row, uint16_t col) {
     switch (term->ttype) {
         case TTYPE_VGA:
-        if (isprint(term->cells[row][col].ch))
         vga_putchar(col, row, vga_entry_create((uint8_t) term->cells[row][col].ch, VGA_COLOR_WHITE));
         break;
     }
