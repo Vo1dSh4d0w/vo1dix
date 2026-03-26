@@ -3,4 +3,4 @@
 ./build.sh
 ./mkiso.sh
 
-qemu-system-i386 -cdrom out/vo1dix.iso
+qemu-system-i386 -cdrom out/vo1dix.iso -serial file:kernel.log

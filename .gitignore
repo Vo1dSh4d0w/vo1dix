@@ -8,3 +8,4 @@ vo1dix.kernel
 .direnv
 .cache
 compile_commands.json
+kernel.log

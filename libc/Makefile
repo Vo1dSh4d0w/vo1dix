@@ -8,10 +8,14 @@ LIBC_OBJS=\
 ctype/isprint.o \
 stdio/printf.o \
 stdio/putchar.o \
+stdio/snprintf.o \
+stdio/vprintf.o \
+stdio/vsnprintf.o \
 string/memmove.o \
 string/memset.o \
 string/strlen.o \
-sys/io/outb.o
+sys/io/inb.o \
+sys/io/outb.o \
 
 LIBK_OBJS=$(LIBC_OBJS:.o=.libk.o)
 
