@@ -10,7 +10,8 @@ stdio/printf.o \
 stdio/putchar.o \
 string/memmove.o \
 string/memset.o \
-string/strlen.o
+string/strlen.o \
+sys/io/outb.o
 
 LIBK_OBJS=$(LIBC_OBJS:.o=.libk.o)
 

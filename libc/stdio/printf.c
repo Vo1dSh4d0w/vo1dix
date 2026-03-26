@@ -1,6 +1,9 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stddef.h>
+#ifdef __IS_LIBK
+#include <kernel/terminal.h>
+#endif
 
 static int write(char *str) {
     int l;
@@ -13,27 +16,50 @@ static int write(char *str) {
 static void itoa(char *buf, int i, int base) {
     unsigned int ui = i, rem;
     char *ptr = buf, *left, *right, tmp;
-    
+
     if (i < 0) {
         *ptr++ = '-';
         buf++;
         ui = -i;
     }
-    
+
     do {
         rem = ui % base;
         *ptr++ = rem < 10 ? '0' + rem : 'a' + rem - 10;
     } while (ui /= base);
-    
+
     *ptr = 0;
     left = buf;
     right = ptr - 1;
-    
+
     while (left < right) {
         tmp = *left;
         *left = *right;
         *right = tmp;
-        
+
+        left++;
+        right--;
+    }
+}
+
+static void utoa(char *buf, unsigned int i, int base) {
+    unsigned int rem;
+    char *ptr = buf, *left, *right, tmp;
+
+    do {
+        rem = i % base;
+        *ptr++ = rem < 10 ? '0' + rem : 'a' + rem - 10;
+    } while (i /= base);
+
+    *ptr = 0;
+    left = buf;
+    right = ptr - 1;
+
+    while (left < right) {
+        tmp = *left;
+        *left = *right;
+        *right = tmp;
+
         left++;
         right--;
     }
@@ -41,10 +67,11 @@ static void itoa(char *buf, int i, int base) {
 
 int printf(const char *restrict format, ...) {
     int len = 0, d;
+    unsigned int u;
     char *str, buf[32], c;
     va_list ap;
     va_start(ap, format);
-    
+
     while (format[0]) {
         if (format[0] == '%') {
             format++;
@@ -64,8 +91,8 @@ int printf(const char *restrict format, ...) {
                 len += write(buf);
                 break;
                 case 'x':
-                d = va_arg(ap, int);
-                itoa(buf, d, 16);
+                u = va_arg(ap, unsigned int);
+                utoa(buf, u, 16);
                 len += write(buf);
                 break;
                 case '%':
@@ -80,6 +107,10 @@ int printf(const char *restrict format, ...) {
             format++;
         }
     }
-    
+
+#ifdef __IS_LIBK
+    terminal_update_cursor(&tty0);
+#endif
+
     return len;
 }

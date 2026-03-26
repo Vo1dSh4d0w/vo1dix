@@ -63,3 +63,11 @@ void terminal_putchar(TERMINAL *term, int c) {
         terminal_render_full(term);
     }
 }
+
+void terminal_update_cursor(TERMINAL *term) {
+    switch (term->ttype) {
+        case TTYPE_VGA:
+        vga_move_cursor(term->col, term->row);
+        break;
+    }
+}

@@ -2,6 +2,7 @@
 #define _KERNEL_ARCH_I386_VGA_H
 
 #include <stdint.h>
+#include <sys/io.h>
 
 enum vga_color {
     VGA_COLOR_BLACK             = 0b0000,
@@ -33,6 +34,14 @@ static inline uint16_t vga_entry_create(uint8_t charcode, uint8_t attribute) {
 static inline void vga_putchar(uint32_t col, uint32_t ln, uint16_t entry) {
     uint16_t *ptr = (uint16_t *)(0xB8000 + ln * 160 + col * 2);
     *ptr = entry;
+}
+
+static void vga_move_cursor(uint32_t x, uint32_t y) {
+    uint32_t pos = y * 80 + x;
+    outb(0x0e, 0x3d4);
+    outb((uint8_t)((pos >> 8) & 0xff), 0x3d5);
+    outb(0x0f, 0x3d4);
+    outb((uint8_t)(pos & 0xff), 0x3d5);
 }
 
 #endif

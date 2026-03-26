@@ -23,8 +23,11 @@ stack_top:
 .type _start, @function
 _start:
     movl $stack_top, %esp
+    push %ebx
 
     call kernel_main
+
+    pop %ebx
 
 1:  hlt
     jmp 1b

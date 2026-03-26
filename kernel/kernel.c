@@ -1,8 +1,13 @@
+#include "include/kernel/init.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <kernel/terminal.h>
+#include <kernel/init.h>
+#include <sys/io.h>
 
-void kernel_main() {
+void kernel_main(void *boot_info) {
+    arch_early_init(boot_info);
+
     uint8_t attr = 0;
     for (int i = 0; i < 24; i++) {
         if ((attr & 0b1111) == 0) {
@@ -10,8 +15,9 @@ void kernel_main() {
         } else {
             terminal_set_attr(&tty0, attr++ & 0b1111);
         }
-        printf("Hello, world! %x\n", i, (attr - 1) & 0b1111);
+        printf("Hello, world! %x\n", (attr - 1) & 0b1111);
     }
-    
+    printf("Cursor test \rCu");
+
     for (;;) {}
 }
