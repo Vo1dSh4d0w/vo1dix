@@ -2,7 +2,7 @@ TARGET_ARCH?=i686
 
 CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -Iinclude
 LDFLAGS:=$(LDFLAGS)
-LIBS:=$(LIBS) -nostdlib -lgcc -lk
+LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
 ARCH_SOURCE=arch/$(TARGET_ARCH)
 
@@ -11,6 +11,7 @@ include $(ARCH_SOURCE)/make.config
 KERNEL_OBJS=\
 $(KERNEL_ARCH_OBJS) \
 kernel.o \
+kmalloc.o \
 
 OBJS=\
 $(ARCH_SOURCE)/crti.o \

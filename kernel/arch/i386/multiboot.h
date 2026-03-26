@@ -2,6 +2,8 @@
 #define _KERNEL_ARCH_I386_MULTIBOOT_H
 #include <stdint.h>
 
+#define MULTIBOOT_BI_FLAG_MMAP (1 << 6)
+
 struct multiboot_boot_info {
   uint32_t flags;
   uint32_t mem_lower;
@@ -29,7 +31,7 @@ struct multiboot_boot_info {
   uint32_t drives_length;
   uint32_t drives_addr;
   uint32_t config_table;
-  char *boot_loader_name;
+  uint32_t boot_loader_name;
   uint32_t apm_table;
   uint32_t vbe_control_info;
   uint32_t vbe_mode_info;
@@ -44,6 +46,13 @@ struct multiboot_boot_info {
   uint8_t framebuffer_bpp;
   uint8_t framebuffer_type;
   uint8_t color_info[6];
-};
+} __attribute__((packed));
+
+struct multiboot_mmap_entry {
+  uint32_t size;
+  uint64_t base_addr;
+  uint64_t length;
+  uint32_t type;
+} __attribute__((packed));
 
 #endif

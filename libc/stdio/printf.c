@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <stdint.h>
 #ifdef __IS_LIBK
 #include <kernel/terminal.h>
 #endif
@@ -13,7 +14,7 @@ static int write(char *str) {
     return l;
 }
 
-static void itoa(char *buf, int i, int base) {
+static void itoa(char *buf, int64_t i, int base) {
     unsigned int ui = i, rem;
     char *ptr = buf, *left, *right, tmp;
 
@@ -42,7 +43,7 @@ static void itoa(char *buf, int i, int base) {
     }
 }
 
-static void utoa(char *buf, unsigned int i, int base) {
+static void utoa(char *buf, uint64_t i, int base) {
     unsigned int rem;
     char *ptr = buf, *left, *right, tmp;
 
@@ -66,8 +67,9 @@ static void utoa(char *buf, unsigned int i, int base) {
 }
 
 int printf(const char *restrict format, ...) {
-    int len = 0, d;
-    unsigned int u;
+    int len = 0;
+    int64_t d;
+    uint64_t u;
     char *str, buf[32], c;
     va_list ap;
     va_start(ap, format);
@@ -77,7 +79,7 @@ int printf(const char *restrict format, ...) {
             format++;
             switch (format[0]) {
                 case 'c':
-                c = va_arg(ap, int);
+                c = va_arg(ap, int64_t);
                 putchar(c);
                 len++;
                 break;
@@ -91,7 +93,7 @@ int printf(const char *restrict format, ...) {
                 len += write(buf);
                 break;
                 case 'x':
-                u = va_arg(ap, unsigned int);
+                u = va_arg(ap, uint64_t);
                 utoa(buf, u, 16);
                 len += write(buf);
                 break;
