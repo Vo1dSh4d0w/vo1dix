@@ -1,5 +1,6 @@
 #include "serial.h"
 #include "bda.h"
+#include <stdio.h>
 #include <sys/io.h>
 
 int serial_init() {
@@ -24,3 +25,15 @@ void serial_write(char c) {
     
     outb(c, bios_data->com1);
 }
+
+void __serial_write(__attribute__((unused)) FILE *file, const char *restrict str, size_t len) {
+    size_t idx;
+    for (idx = 0; idx < len; idx++) {
+        serial_write(str[idx]);
+    }
+}
+
+FILE *serial_out = &(FILE) {
+    .device = 0,
+    .write = __serial_write
+};

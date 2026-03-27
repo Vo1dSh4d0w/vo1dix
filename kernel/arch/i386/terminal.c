@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <kernel/terminal.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include "vga.h"
 
@@ -71,3 +72,16 @@ void terminal_update_cursor(TERMINAL *term) {
         break;
     }
 }
+
+static void __stdio_write(FILE *f, const char *restrict str, size_t len) {
+    size_t idx;
+    for (idx = 0; idx < len; idx++) {
+        terminal_putchar((TERMINAL *)f->device, str[idx]);
+    }
+    terminal_update_cursor((TERMINAL *)f->device);
+}
+
+FILE *stdout = &(FILE) {
+    .device = &tty0,
+    .write = __stdio_write
+};

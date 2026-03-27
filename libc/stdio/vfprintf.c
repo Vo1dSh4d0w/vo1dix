@@ -1,19 +1,23 @@
-#include <stdint.h>
+#include <stdio.h>
 #include <stdarg.h>
-#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 #include <stdlib.h>
+#ifdef __IS_LIBK
+#include <kernel/terminal.h>
+#endif
 
-int vsnprintf(char *str, size_t size, const char *restrict format, va_list ap) {
+
+int vfprintf(FILE *file, const char *restrict format, va_list ap) {
     uint8_t lflag, llflag;
-    size_t len = 0, sidx;
-    int i;
+    int len = 0, i;
     unsigned int u;
     long l;
     long long ll;
     unsigned long ul;
     unsigned long long ull;
-    char *s, buf[32], c;
-    
+    size_t le;
+    char *str, buf[32], c;
 
     while (format[0]) {
         if (format[0] == '%') {
@@ -35,19 +39,14 @@ int vsnprintf(char *str, size_t size, const char *restrict format, va_list ap) {
             switch (format[0]) {
                 case 'c':
                 c = va_arg(ap, int);
-                if (len + 1 >= size) {
-                    goto vsnprintf_end;
-                }
-                str[len++] = c;
+                file->write(file, &c, 1);
+                len++;
                 break;
                 case 's':
-                s = va_arg(ap, char*);
-                for (sidx = 0; s[sidx]; sidx++) {
-                    if (len + 1 >= size) {
-                        goto vsnprintf_end;
-                    }
-                    str[len++] = s[sidx];
-                }
+                str = va_arg(ap, char*);
+                le = strlen(str);
+                file->write(file, str, le);
+                len += le;
                 break;
                 case 'd':
                 if (llflag) {
@@ -60,12 +59,9 @@ int vsnprintf(char *str, size_t size, const char *restrict format, va_list ap) {
                     i = va_arg(ap, int);
                     itoa(buf, i, 10);
                 }
-                for (sidx = 0; buf[sidx]; sidx++) {
-                    if (len + 1 >= size) {
-                        goto vsnprintf_end;
-                    }
-                    str[len++] = buf[sidx];
-                }
+                le = strlen(buf);
+                file->write(file, buf, le);
+                len += le;
                 break;
                 case 'x':
                 if (llflag) {
@@ -78,33 +74,30 @@ int vsnprintf(char *str, size_t size, const char *restrict format, va_list ap) {
                     u = va_arg(ap, unsigned int);
                     utoa(buf, u, 16);
                 }
-                for (sidx = 0; buf[sidx]; sidx++) {
-                    if (len + 1 >= size) {
-                        goto vsnprintf_end;
-                    }
-                    str[len++] = buf[sidx];
-                }
+                le = strlen(buf);
+                file->write(file, buf, le);
+                len += le;
                 break;
                 case '%':
-                if (len + 1 >= size) {
-                    goto vsnprintf_end;
-                }
-                str[len++] = '%';
+                file->write(file, "%", 1);
+                len++;
+                break;
+                default:
+                file->write(file, format - (1 + llflag * 2 + lflag), 2 + llflag * 2 + lflag);
+                len += 2 + llflag * 2 + lflag;
                 break;
             }
             format++;
         } else {
-            if (len + 1 >= size) {
-                goto vsnprintf_end;
-            }
-            str[len++] = format[0];
+            file->write(file, format, 1);
+            len++;
             format++;
         }
     }
-    vsnprintf_end:
-    if (size > 0) {
-        str[len] = 0;
-    }
+
+#ifdef __IS_LIBK
+    terminal_update_cursor(&tty0);
+#endif
 
     return len;
 }

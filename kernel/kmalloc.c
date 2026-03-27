@@ -14,7 +14,7 @@ void heap_init(uintptr_t _heap_start, uintptr_t _heap_end) {
     heap_end = _heap_end;
     heap_initialized = 1;
     
-    kdprintf("heap initialized between %x and %x\ntotal heap size: %d bytes\n", (uint64_t)heap_start, (uint64_t)heap_end, (int64_t)(heap_end - heap_start));
+    kdprintf("heap initialized between %x and %x\ntotal heap size: %d bytes\n", heap_start, heap_end, heap_end - heap_start);
 }
 
 void *kmalloc(size_t n) {

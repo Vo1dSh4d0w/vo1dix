@@ -6,11 +6,14 @@ LIBK_CFLAGS=$(CFLAGS) -D__IS_LIBK
 
 LIBC_OBJS=\
 ctype/isprint.o \
+stdio/fprintf.o \
 stdio/printf.o \
 stdio/putchar.o \
 stdio/snprintf.o \
+stdio/vfprintf.o \
 stdio/vprintf.o \
 stdio/vsnprintf.o \
+stdlib/itoa.o \
 string/memmove.o \
 string/memset.o \
 string/strlen.o \

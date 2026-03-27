@@ -1,4 +1,7 @@
 #ifndef _KERNEL_ARCH_I386_SERIAL_H
+
+#include <stdio.h>
+
 #define _KERNEL_ARCH_I386_SERIAL_H
 
 #define SERIAL_RX_BUFFER 0
@@ -27,6 +30,8 @@
 #define SERIAL_MODEM_LOOPBACK 0x10
 
 #define SERIAL_THRE 0x20
+
+extern FILE *serial_out;
 
 int serial_init();
 void serial_write(char c);
